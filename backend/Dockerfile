@@ -5,10 +5,16 @@ WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY core/ /core/
-RUN pip install -e /core
+# Copy project root for core package
+COPY pyproject.toml .
+COPY core/ ./core/
+
+# Install core package
+RUN pip install -e .
 
 COPY backend/ .
+
+ENV PYTHONPATH=/app
 
 EXPOSE 8000
 
