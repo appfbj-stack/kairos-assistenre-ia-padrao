@@ -18,7 +18,9 @@ services:
       - kairos_network
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     container_name: kairos-assistant-api
     ports:
       - "8070:8000"
