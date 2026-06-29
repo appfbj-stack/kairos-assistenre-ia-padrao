@@ -21,5 +21,8 @@ class Settings(BaseSettings):
 
     cors_origins: list[str] = ["*"]
 
+    aion_base_url: str = os.getenv("AION_BASE_URL", "http://localhost:8080")
+    aion_api_key: str = os.getenv("AION_API_KEY", "")
+
 
 settings = Settings()

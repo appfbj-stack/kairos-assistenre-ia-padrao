@@ -12,6 +12,7 @@ import {
   FileText,
   Settings,
   HelpCircle,
+  Cpu,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/chat", label: "Chat", icon: MessageSquare },
   { href: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { href: "/documentos", label: "Documentos", icon: FileText },
+  { href: "/aion", label: "Aion Engine", icon: Cpu },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
   { href: "/ajuda", label: "Ajuda", icon: HelpCircle },
 ]

@@ -5,12 +5,13 @@ WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project root for core package
+# Copy project root for core + aion packages
 COPY pyproject.toml .
 COPY core/ ./core/
+COPY kairos-aion-integration/ ./kairos-aion-integration/
 
-# Install core package
-RUN pip install -e .
+# Install core + aion packages
+RUN pip install -e . && pip install -e ./kairos-aion-integration
 
 COPY backend/ .
 

@@ -28,6 +28,7 @@ class Orchestrator:
         prompt_composer: PromptComposer,
         event_bus: InMemoryEventBus,
         llm: LLMPort,
+        aion_integration=None,
     ):
         self.context = context_manager
         self.conversations = conversation_manager
@@ -37,6 +38,7 @@ class Orchestrator:
         self.prompts = prompt_composer
         self.events = event_bus
         self.llm = llm
+        self.aion = aion_integration
         self._default_model = "openrouter/auto"
 
     async def process_message(
@@ -68,11 +70,23 @@ class Orchestrator:
         app_tools = await self.tools.list_by_app(ctx.app.id) if ctx.app.id else []
         openai_tools = self.tools.to_openai_tools(app_tools)
 
+        aion_tools = []
+        if self.aion and self.aion._is_initialized:
+            aion_tools = self.aion.get_openai_tools()
+            openai_tools.extend(aion_tools)
+
         agent = self.agents.find_for_intent(message)
         if agent:
             await self.events.publish(Event(EventType.AGENT_TRIGGERED, {"agent": agent.name}))
 
+        aion_candidates = []
+        if self.aion and self.aion._is_initialized:
+            aion_candidates = self.aion.discovery.find_for_intent(message)
+
         system_prompt = self.prompts.compose(context=ctx)
+        system_prompt += "\n\nVocê tem acesso a capacidades do Aion (Skills, MCPs, Agentes especializados)."
+        system_prompt += "\nSkills Aion têm o prefixo 'aion_', MCPs têm o prefixo 'mcp_'."
+        system_prompt += "\nUse a ferramenta mais adequada para cada tarefa."
 
         await self.events.publish(Event(EventType.LLM_CALLED, {
             "conversation_id": conversation_id, "tools_count": len(openai_tools)
@@ -100,8 +114,32 @@ class Orchestrator:
                 fn = tc["function"]
                 try:
                     args = json.loads(fn["arguments"])
-                    result = await self.tools.execute(fn["name"], ctx.app.id, args, audit_context=audit_ctx)
-                    final_content += f"\n\n[Ferramenta '{fn['name']}' executada]"
+                    tool_name = fn["name"]
+                    if tool_name.startswith("aion_") and self.aion:
+                        skill_name = tool_name.replace("aion_", "")
+                        result_data = await self.aion.execute(skill_name, args, audit_context=audit_ctx)
+                        status = result_data.get("status", "error")
+                        if status == "approval_required":
+                            final_content += f"\n\n[Ação '{tool_name}' requer aprovação - ID: {result_data.get('approval_id')}]"
+                        elif status == "ok":
+                            final_content += f"\n\n[Aion Skill '{skill_name}' executada]"
+                        else:
+                            final_content += f"\n\n[Erro Aion: {result_data.get('error', 'desconhecido')}]"
+                    elif tool_name.startswith("mcp_") and self.aion:
+                        parts = tool_name.split("_", 2)
+                        if len(parts) == 3:
+                            _, mcp_name, mcp_tool = parts
+                            result_data = await self.aion.execute(mcp_name, {"_tool": mcp_tool, **args}, audit_context=audit_ctx)
+                            status = result_data.get("status", "error")
+                            if status == "ok":
+                                final_content += f"\n\n[MCP '{mcp_name}/{mcp_tool}' executado]"
+                            else:
+                                final_content += f"\n\n[Erro MCP: {result_data.get('error', 'desconhecido')}]"
+                        else:
+                            final_content += f"\n\n[MCP '{tool_name}' formato inválido]"
+                    else:
+                        result = await self.tools.execute(tool_name, ctx.app.id, args, audit_context=audit_ctx)
+                        final_content += f"\n\n[Ferramenta '{tool_name}' executada]"
                 except ValueError:
                     final_content += f"\n\n[Ferramenta '{fn['name']}' não encontrada]"
 
@@ -137,7 +175,12 @@ class Orchestrator:
         app_tools = await self.tools.list_by_app(ctx.app.id) if ctx.app.id else []
         openai_tools = self.tools.to_openai_tools(app_tools)
 
+        if self.aion and self.aion._is_initialized:
+            openai_tools.extend(self.aion.get_openai_tools())
+
         system_prompt = self.prompts.compose(context=ctx)
+        system_prompt += "\n\nVocê tem acesso a capacidades do Aion (Skills, MCPs, Agentes especializados)."
+        system_prompt += "\nSkills Aion têm o prefixo 'aion_', MCPs têm o prefixo 'mcp_'."
 
         full_response = ""
         async for chunk in self.llm.chat_stream(

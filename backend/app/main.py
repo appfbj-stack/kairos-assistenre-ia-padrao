@@ -16,6 +16,7 @@ from app.repos.memory_repo import SQLAlchemyMemoryRepo
 from app.repos.tool_repo import SQLAlchemyToolRepo
 from app.repos.audit_repo import SQLAlchemyAuditRepo
 from app.repos.openrouter_llm import OpenRouterLLM
+from app.routes.aion import router as aion_router
 
 
 @asynccontextmanager
@@ -28,8 +29,15 @@ async def lifespan(app: FastAPI):
         audit_repo=SQLAlchemyAuditRepo(async_session),
         llm=OpenRouterLLM(),
         openrouter_key=settings.openrouter_api_key,
+        aion_base_url=settings.aion_base_url,
+        aion_api_key=settings.aion_api_key,
     ).build()
     app.state.container = container
+    if container.aion_integration:
+        try:
+            await container.aion_integration.initialize()
+        except Exception:
+            pass
     yield
 
 
@@ -53,3 +61,4 @@ app.include_router(audit_router)
 app.include_router(apps_router)
 app.include_router(agent_router)
 app.include_router(multimodal_router)
+app.include_router(aion_router)

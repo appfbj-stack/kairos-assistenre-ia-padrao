@@ -31,6 +31,8 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - TTS_API_KEY=${TTS_API_KEY}
       - TTS_PROVIDER=${TTS_PROVIDER:-elevenlabs}
+      - AION_BASE_URL=${AION_BASE_URL:-http://aion:8080}
+      - AION_API_KEY=${AION_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
