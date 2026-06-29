@@ -1,0 +1,7 @@
+[project]
+name = "kairos-assistant"
+version = "1.0.0"
+description = "Kairos Assistant 2.0"
+
+[tool.setuptools.packages.find]
+include = ["core*"]

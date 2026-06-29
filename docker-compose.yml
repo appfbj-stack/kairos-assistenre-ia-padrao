@@ -1,0 +1,38 @@
+services:
+  kairos-assistant:
+    build: .
+    container_name: kairos-assistant
+    ports:
+      - "3030:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://api.assistente.fbautomacao.space
+    restart: unless-stopped
+
+  kairos-assistant-api:
+    build: ./backend
+    container_name: kairos-assistant-api
+    ports:
+      - "8030:8000"
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_MODEL=openrouter/auto
+      - DATABASE_URL=postgresql+asyncpg://kairos:kairos2026@postgres:5432/kairos_assistant
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: kairos-assistant-db
+    environment:
+      - POSTGRES_USER=kairos
+      - POSTGRES_PASSWORD=kairos2026
+      - POSTGRES_DB=kairos_assistant
+    volumes:
+      - kairos-assistant-pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  kairos-assistant-pgdata:
