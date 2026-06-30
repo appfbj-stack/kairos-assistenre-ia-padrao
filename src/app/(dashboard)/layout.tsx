@@ -2,19 +2,22 @@ import { Sidebar } from "@/components/layout/Sidebar"
 import { Header } from "@/components/layout/Header"
 
 export default function DashboardLayout({
-  children,
+    children,
 }: {
-  children: React.ReactNode
+    children: React.ReactNode
 }) {
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <div className="flex flex-col flex-1 min-w-0">
-        <Header />
-        <main className="flex-1 overflow-auto">
-          {children}
-        </main>
-      </div>
-    </div>
-  )
-}
+    return (
+          <div
+                  className="flex h-screen overflow-hidden"
+                  style={{ background: "#07071a" }}
+                >
+                <Sidebar />
+                <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+                        <Header />
+                        <main className="flex-1 overflow-auto" style={{ background: "#07071a" }}>
+                          {children}
+                        </main>main>
+                </div>div>
+          </div>div>
+        )
+}</div>
