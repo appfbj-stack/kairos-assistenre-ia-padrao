@@ -10,14 +10,15 @@ from app.routes.audit import router as audit_router
 from app.routes.apps import router as apps_router
 from app.routes.agent_ws import router as agent_router
 from app.routes.multimodal import router as multimodal_router
+from app.routes.aion import router as aion_router
+from app.routes.members import router as members_router
+from app.routes.langgraph_agent import router as langgraph_router
 from core.container import Container
 from app.repos.conversation_repo import SQLAlchemyConversationRepo
 from app.repos.memory_repo import SQLAlchemyMemoryRepo
 from app.repos.tool_repo import SQLAlchemyToolRepo
 from app.repos.audit_repo import SQLAlchemyAuditRepo
 from app.repos.openrouter_llm import OpenRouterLLM
-from app.routes.aion import router as aion_router
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -40,9 +41,10 @@ async def lifespan(app: FastAPI):
             pass
     yield
 
-
 app = FastAPI(
     title=settings.app_name,
+    description="Kairos Assistant API - Powered by Aion Multi-Agent System",
+    version="2.1.0",
     lifespan=lifespan,
 )
 
@@ -54,6 +56,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Rotas existentes
 app.include_router(health_router)
 app.include_router(chat_router)
 app.include_router(tools_router)
@@ -62,3 +65,7 @@ app.include_router(apps_router)
 app.include_router(agent_router)
 app.include_router(multimodal_router)
 app.include_router(aion_router)
+
+# Novas rotas - Sistema de Agentes Aion
+app.include_router(members_router)      # CRUD de membros da igreja
+app.include_router(langgraph_router)    # Sistema multi-agente LangGraph
