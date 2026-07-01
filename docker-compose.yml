@@ -17,6 +17,18 @@ services:
     networks:
       - kairos_network
 
+  # Ollama - LLM local para testes sem custo de API
+  ollama:
+    image: ollama/ollama:latest
+    container_name: kairos-ollama
+    volumes:
+      - kairos-ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    networks:
+      - kairos_network
+
   backend:
     build:
       context: .
@@ -33,6 +45,12 @@ services:
       - TTS_PROVIDER=${TTS_PROVIDER:-elevenlabs}
       - AION_BASE_URL=${AION_BASE_URL:-http://aion:8080}
       - AION_API_KEY=${AION_API_KEY}
+      # Ollama - LLM local para agentes
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3}
+      # Agentes LangGraph
+      - LANGGRAPH_ENABLED=${LANGGRAPH_ENABLED:-true}
+      - DEFAULT_AGENT_APP=${DEFAULT_AGENT_APP:-geral}
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,3 +79,4 @@ networks:
 
 volumes:
   kairos-assistant-pgdata:
+  kairos-ollama-data:
