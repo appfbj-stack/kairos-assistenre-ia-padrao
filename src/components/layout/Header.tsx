@@ -20,7 +20,7 @@ export function Header() {
                         style={{ color: "#64748b" }}
                       >
                       <Menu className="w-5 h-5" />
-              </button>button>
+              </button>
               <div className="flex items-center gap-2 ml-3">
                       <div
                                   className="w-7 h-7 rounded-full flex items-center justify-center"
@@ -29,8 +29,8 @@ export function Header() {
                                                 boxShadow: "0 0 12px rgba(59,130,246,0.5)",
                                   }}
                                 />
-                      <span className="text-[15px] font-semibold text-white">Kairós</span>span>
-              </div>div>
-        </header>header>
+                      <span className="text-[15px] font-semibold text-white">KairÃ³s</span>
+              </div>
+        </header>
       )
 }</header>
