@@ -16,8 +16,8 @@ export default function DashboardLayout({
                         <Header />
                         <main className="flex-1 overflow-auto" style={{ background: "#07071a" }}>
                           {children}
-                        </main>main>
-                </div>div>
-          </div>div>
+                        </main>
+                </div>
+          </div>
         )
 }</div>
