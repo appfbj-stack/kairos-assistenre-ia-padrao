@@ -133,11 +133,11 @@ export function Sidebar() {
                                                                                                                                     />
                                                                                             {item.label}
                                                                                             </div>
-                                                                        </Link>Link>
+                                                                        </Link>
                                                                       )
                                   })}
                                 </nav>
-                      </ScrollArea>ScrollArea>
+                      </ScrollArea>
               
                 {/* User profile */}
                       <div className="px-3 py-3 border-t border-white/[0.05]">
@@ -186,6 +186,6 @@ export function Sidebar() {
                                 </button>
                       </div>
               </aside>
-        </>>
+        </>
       )
-}</>
+}
