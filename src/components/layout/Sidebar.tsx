@@ -23,16 +23,16 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const navItems = [
-  { href: "/", label: "Início", icon: Home },
+  { href: "/", label: "InÃ­cio", icon: Home },
   { href: "/chat", label: "Conversas", icon: MessageSquare },
   { href: "/agentes", label: "Agentes", icon: Bot },
   { href: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { href: "/documentos", label: "Documentos", icon: FileText },
   { href: "/aion", label: "MCPs", icon: Cpu },
   { href: "/skills", label: "Skills", icon: Zap },
-  { href: "/historico", label: "Histórico", icon: History },
+  { href: "/historico", label: "HistÃ³rico", icon: History },
   { href: "/painel", label: "Painel", icon: BarChart2 },
-  { href: "/configuracoes", label: "Configurações", icon: Settings },
+  { href: "/configuracoes", label: "ConfiguraÃ§Ãµes", icon: Settings },
   ]
 
 export function Sidebar() {
@@ -94,14 +94,14 @@ export function Sidebar() {
                                                                                                 boxShadow: "0 0 15px rgba(147,197,253,0.9)",
                                                                             }}
                                                                           />
-                                            </div>div>
-                                </div>div>
-                                <h2 className="text-[17px] font-bold text-white tracking-wide">Kairós</h2>h2>
+                                            </div>
+                                </div>
+                                <h2 className="text-[17px] font-bold text-white tracking-wide">KairÃ³s</h2>
                                 <p className="text-[11px] text-center mt-0.5" style={{ color: "#64748b" }}>
-                                            Inteligência que age
+                                            InteligÃªncia que age
                                             <br />no momento certo.
-                                </p>p>
-                      </div>div>
+                                </p>
+                      </div>
               
                 {/* Nav */}
                       <ScrollArea className="flex-1 px-3">
@@ -132,11 +132,11 @@ export function Sidebar() {
                                                                                                                                       style={{ color: isActive ? "#60a5fa" : undefined }}
                                                                                                                                     />
                                                                                             {item.label}
-                                                                                            </div>div>
+                                                                                            </div>
                                                                         </Link>Link>
                                                                       )
                                   })}
-                                </nav>nav>
+                                </nav>
                       </ScrollArea>ScrollArea>
               
                 {/* User profile */}
@@ -152,14 +152,14 @@ export function Sidebar() {
                                                             }}
                                                           >
                                                           F
-                                            </div>div>
+                                            </div>
                                             <div className="flex-1 min-w-0">
-                                                          <p className="text-[13px] font-semibold text-white truncate">Fernando</p>p>
-                                                          <p className="text-[11px] truncate" style={{ color: "#64748b" }}>Administrador</p>p>
-                                            </div>div>
+                                                          <p className="text-[13px] font-semibold text-white truncate">Fernando</p>
+                                                          <p className="text-[11px] truncate" style={{ color: "#64748b" }}>Administrador</p>
+                                            </div>
                                             <ChevronDown className="w-3.5 h-3.5 shrink-0" style={{ color: "#475569" }} />
-                                </div>div>
-                      </div>div>
+                                </div>
+                      </div>
               
                 {/* Status bar */}
                       <div className="px-4 py-3 border-t border-white/[0.05]">
@@ -171,21 +171,21 @@ export function Sidebar() {
                                                                               boxShadow: "0 0 8px rgba(34,197,94,0.7)",
                                                             }}
                                                           />
-                                            <span className="text-[12px] font-semibold" style={{ color: "#22c55e" }}>Kairós Online</span>span>
-                                </div>div>
-                                <p className="text-[11px] pl-4" style={{ color: "#475569" }}>Todos os sistemas operando</p>p>
-                      </div>div>
+                                            <span className="text-[12px] font-semibold" style={{ color: "#22c55e" }}>KairÃ³s Online</span>
+                                </div>
+                                <p className="text-[11px] pl-4" style={{ color: "#475569" }}>Todos os sistemas operando</p>
+                      </div>
               
                 {/* Bottom actions */}
                       <div className="flex items-center justify-between px-5 py-3 border-t border-white/[0.05]">
                                 <button className="p-1.5 rounded-lg transition-all hover:bg-white/[0.05]" style={{ color: "#475569" }}>
                                             <Sun className="w-4 h-4" />
-                                </button>button>
+                                </button>
                                 <button className="p-1.5 rounded-lg transition-all hover:bg-white/[0.05]" style={{ color: "#475569" }}>
                                             <LogOut className="w-4 h-4" />
-                                </button>button>
-                      </div>div>
-              </aside>aside>
+                                </button>
+                      </div>
+              </aside>
         </>>
       )
 }</>
