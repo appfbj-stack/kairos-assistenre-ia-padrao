@@ -4,6 +4,7 @@ Run: python seed.py
 """
 import asyncio
 import uuid
+import os
 from app.database import async_session, init_db, engine
 from app.models import Base, Tenant
 from sqlalchemy import select
@@ -18,7 +19,7 @@ async def seed():
             print(f"Tenant already exists: {existing.name} (key: {existing.api_key})")
             return
 
-        api_key = f"kairos-{uuid.uuid4().hex[:24]}"
+        api_key = os.getenv("API_KEY") or f"kairos-{uuid.uuid4().hex[:24]}"
         tenant = Tenant(
             id=uuid.uuid4(),
             name="Default",
