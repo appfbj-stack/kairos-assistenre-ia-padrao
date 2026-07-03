@@ -7,15 +7,15 @@ import enum
 
 
 class EstadoCivil(str, enum.Enum):
-      solteiro = "solteiro"
-      casado = "casado"
-      divorciado = "divorciado"
-      viuvo = "viuvo"
-      uniao_estavel = "uniao_estavel"
+    solteiro = "solteiro"
+    casado = "casado"
+    divorciado = "divorciado"
+    viuvo = "viuvo"
+    uniao_estavel = "uniao_estavel"
 
 
 class Member(Base):
-      __tablename__ = "members"
+    __tablename__ = "members"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     nome: Mapped[str] = mapped_column(String(255), nullable=False)

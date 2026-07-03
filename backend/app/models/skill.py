@@ -6,7 +6,7 @@ from app.database import Base
 
 
 class Skill(Base):
-      __tablename__ = "skills"
+    __tablename__ = "skills"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     nome: Mapped[str] = mapped_column(String(255), nullable=False)
