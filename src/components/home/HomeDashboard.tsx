@@ -31,7 +31,7 @@ const actionCards = [
   {
         icon: FileText,
         title: "Analisar documento",
-        desc: "Leia e extraia informaÃ§Ãµes",
+        desc: "Leia e extraia informações",
         color: "#34d399",
         bg: "rgba(16,185,129,0.12)",
         titleColor: "#34d399",
@@ -40,7 +40,7 @@ const actionCards = [
   {
         icon: Image,
         title: "Analisar imagem",
-        desc: "Entenda o que vocÃª vÃª",
+        desc: "Entenda o que você vê",
         color: "#c084fc",
         bg: "rgba(139,92,246,0.12)",
         href: "/documentos",
@@ -57,7 +57,7 @@ const actionCards = [
   {
         icon: Volume2,
         title: "Falar",
-        desc: "Converse por voz com KairÃ³s",
+        desc: "Converse por voz com Kairós",
         color: "#60a5fa",
         bg: "rgba(59,130,246,0.08)",
         href: "/chat",
@@ -66,22 +66,22 @@ const actionCards = [
 
 const recentActivity = [
   { icon: Church, title: "Cadastrar novo membro", sub: "Sistema Igreja", time: "09:45", status: "done", color: "#60a5fa" },
-  { icon: Wrench, title: "OrÃ§amento de serviÃ§o", sub: "Sistema Oficina", time: "09:30", status: "done", color: "#94a3b8" },
-  { icon: FileText, title: "AnÃ¡lise de PDF", sub: "Documento: RelatÃ³rio_abril.pdf", time: "09:15", status: "done", color: "#60a5fa" },
-  { icon: LayoutGrid, title: "Organizar pasta Downloads", sub: "AÃ§Ã£o no computador", time: "08:50", status: "done", color: "#facc15" },
-  { icon: BarChart2, title: "RelatÃ³rio financeiro", sub: "Sistema Financeiro", time: "08:30", status: "loading", color: "#60a5fa" },
+  { icon: Wrench, title: "Orçamento de serviço", sub: "Sistema Oficina", time: "09:30", status: "done", color: "#94a3b8" },
+  { icon: FileText, title: "Análise de PDF", sub: "Documento: Relatório_abril.pdf", time: "09:15", status: "done", color: "#60a5fa" },
+  { icon: LayoutGrid, title: "Organizar pasta Downloads", sub: "Ação no computador", time: "08:50", status: "done", color: "#facc15" },
+  { icon: BarChart2, title: "Relatório financeiro", sub: "Sistema Financeiro", time: "08:30", status: "loading", color: "#60a5fa" },
   { icon: Database, title: "Backup completo", sub: "Todos os sistemas", time: "Ontem", status: "done", color: "#60a5fa" },
   ]
 
 const connectedSystems = [
   { icon: Church, name: "Igreja", online: true },
   { icon: Wrench, name: "Oficina", online: true },
-  { icon: LayoutGrid, name: "VidraÃ§aria", online: true },
+  { icon: LayoutGrid, name: "Vidraçaria", online: true },
   { icon: DollarSign, name: "Financeiro", online: true },
   ]
 
 const suggestions = [
-  { icon: BarChart2, title: "Gerar relatÃ³rio mensal", sub: "Financeiro", color: "#60a5fa" },
+  { icon: BarChart2, title: "Gerar relatório mensal", sub: "Financeiro", color: "#60a5fa" },
   { icon: Table, title: "Importar dados do Excel", sub: "Membros", color: "#34d399" },
   { icon: Database, title: "Fazer backup agora", sub: "Proteja seus dados", color: "#60a5fa" },
   ]
@@ -128,10 +128,10 @@ export function HomeDashboard() {
                                 <div className="flex items-start justify-between">
                                             <div>
                                                           <h1 className="text-[28px] font-bold text-white leading-tight">
-                                                                          Bom dia, <span style={{ color: "#f59e0b" }}>Fernando!</span> ð
+                                                                          Bom dia, <span style={{ color: "#f59e0b" }}>Fernando!</span> 👋
                                                           </h1>
                                                           <p className="text-[15px] mt-1" style={{ color: "#94a3b8" }}>
-                                                                          Estou aqui para ajudar vocÃª a fazer<br />mais, em menos tempo.
+                                                                          Estou aqui para ajudar você a fazer<br />mais, em menos tempo.
                                                           </p>
                                             </div>
                                   {/* Orbital avatar decoration */}
@@ -197,7 +197,7 @@ export function HomeDashboard() {
                                                           <input
                                                                             value={input}
                                                                             onChange={(e) => setInput(e.target.value)}
-                                                                            placeholder="Como posso ajudar vocÃª hoje?"
+                                                                            placeholder="Como posso ajudar você hoje?"
                                                                             className="w-full bg-transparent text-white text-[15px] outline-none mb-3"
                                                                             style={{ "::placeholder": { color: "#475569" } } as React.CSSProperties}
                                                                           />
@@ -350,7 +350,7 @@ export function HomeDashboard() {
                                                                           <div className="flex items-center justify-between mb-4">
                                                                                             <div className="flex items-center gap-2">
                                                                                                                 <Star className="w-4 h-4" style={{ color: "#f59e0b" }} />
-                                                                                                                <span className="text-[14px] font-semibold text-white">SugestÃµes para vocÃª</span>
+                                                                                                                <span className="text-[14px] font-semibold text-white">Sugestões para você</span>
                                                                                               </div>
                                                                                             <button className="text-[12px] transition-colors hover:text-white" style={{ color: "#3b82f6" }}>
                                                                                                                 Ver todas
@@ -427,7 +427,7 @@ export function HomeDashboard() {
         
           {/* Footer */}
               <div className="text-center pb-3 text-[11px]" style={{ color: "#334155" }}>
-                      KairÃ³s Assistente Inteligente â¢ v1.0.0 â¡
+                      Kairós Assistente Inteligente • v1.0.0 ⚡
               </div>
         </div>
       )
