@@ -23,16 +23,16 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const navItems = [
-  { href: "/", label: "InÃ­cio", icon: Home },
+  { href: "/", label: "Início", icon: Home },
   { href: "/chat", label: "Conversas", icon: MessageSquare },
   { href: "/agentes", label: "Agentes", icon: Bot },
   { href: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { href: "/documentos", label: "Documentos", icon: FileText },
   { href: "/aion", label: "MCPs", icon: Cpu },
   { href: "/skills", label: "Skills", icon: Zap },
-  { href: "/historico", label: "HistÃ³rico", icon: History },
+  { href: "/historico", label: "Histórico", icon: History },
   { href: "/painel", label: "Painel", icon: BarChart2 },
-  { href: "/configuracoes", label: "ConfiguraÃ§Ãµes", icon: Settings },
+  { href: "/configuracoes", label: "Configurações", icon: Settings },
   ]
 
 export function Sidebar() {
@@ -96,9 +96,9 @@ export function Sidebar() {
                                                                           />
                                             </div>
                                 </div>
-                                <h2 className="text-[17px] font-bold text-white tracking-wide">KairÃ³s</h2>
+                                <h2 className="text-[17px] font-bold text-white tracking-wide">Kairós</h2>
                                 <p className="text-[11px] text-center mt-0.5" style={{ color: "#64748b" }}>
-                                            InteligÃªncia que age
+                                            Inteligência que age
                                             <br />no momento certo.
                                 </p>
                       </div>
@@ -171,7 +171,7 @@ export function Sidebar() {
                                                                               boxShadow: "0 0 8px rgba(34,197,94,0.7)",
                                                             }}
                                                           />
-                                            <span className="text-[12px] font-semibold" style={{ color: "#22c55e" }}>KairÃ³s Online</span>
+                                            <span className="text-[12px] font-semibold" style={{ color: "#22c55e" }}>Kairós Online</span>
                                 </div>
                                 <p className="text-[11px] pl-4" style={{ color: "#475569" }}>Todos os sistemas operando</p>
                       </div>
