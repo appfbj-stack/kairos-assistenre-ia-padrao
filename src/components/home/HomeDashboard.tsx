@@ -128,7 +128,7 @@ export function HomeDashboard() {
                                 <div className="flex items-start justify-between">
                                             <div>
                                                           <h1 className="text-[28px] font-bold text-white leading-tight">
-                                                                          Bom dia, <span style={{ color: "#f59e0b" }}>Fernando!</span> 👋
+                                                                          Bom dia, <span style={{ color: "#f59e0b" }}>Fernando!</span> 👋
                                                           </h1>
                                                           <p className="text-[15px] mt-1" style={{ color: "#94a3b8" }}>
                                                                           Estou aqui para ajudar você a fazer<br />mais, em menos tempo.
