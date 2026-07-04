@@ -62,14 +62,14 @@ services:
     build:
       context: .
       args:
-        - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space/api
+        - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space
         - NEXT_PUBLIC_API_KEY=kairos-b4cad9a30caf4491809f90ff
     container_name: kairos-assistant-frontend
     ports:
       - "3050:3000"
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space/api
+      - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space
       - NEXT_PUBLIC_API_KEY=${API_KEY}
     depends_on:
       - backend
