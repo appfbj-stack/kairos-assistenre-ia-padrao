@@ -13,3 +13,5 @@ venv/
 *.sqlite
 .DS_Store
 Thumbs.db
+*.tgz
+*.tsbuildinfo

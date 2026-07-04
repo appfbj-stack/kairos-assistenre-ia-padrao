@@ -7,6 +7,7 @@ from core.application.prompt_composer import PromptComposer
 from core.application.conversation_manager import ConversationManager
 from core.application.event_bus import InMemoryEventBus
 from core.application.audit_manager import AuditManager
+from core.application.app_registry import AppRegistry
 from kairos_aion_integration import AionIntegration, AionConnector, AionDiscovery, AionSkillRegistry, MCPManager, AionSecurity
 
 
@@ -16,6 +17,7 @@ class Container:
         conversation_repo=None,
         memory_repo=None,
         tool_repo=None,
+        app_repo=None,
         audit_repo=None,
         llm=None,
         openrouter_key="",
@@ -28,6 +30,7 @@ class Container:
         self.conversation_repo = conversation_repo
         self.memory_repo = memory_repo
         self.tool_repo = tool_repo
+        self.app_repo = app_repo
         self.audit_repo = audit_repo
         self.llm = llm
         self.openrouter_key = openrouter_key
@@ -40,6 +43,7 @@ class Container:
         self.conversation_manager = ConversationManager(self.conversation_repo) if conversation_repo else None
         self.memory_manager = MemoryManager(self.memory_repo, self.event_bus.publish) if memory_repo else None
         self.tool_registry = ToolRegistry(self.tool_repo, self.event_bus.publish) if tool_repo else None
+        self.app_registry = AppRegistry(self.app_repo) if app_repo else None
         self.agent_manager = AgentManager(self.event_bus.publish)
         self.prompt_composer = PromptComposer()
         self.audit_manager = None

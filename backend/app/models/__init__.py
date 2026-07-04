@@ -1,6 +1,6 @@
 from app.config import settings
 from app.database import Base
-from sqlalchemy import Column, String, DateTime, Text, Boolean
+from sqlalchemy import Column, String, DateTime, Text, Boolean, JSON
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
 import uuid
@@ -57,11 +57,22 @@ class App(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     tenant_id = Column(UUID(as_uuid=True), nullable=False, index=True)
     name = Column(String(255), nullable=False)
-    slug = Column(String(100), nullable=False)
+    slug = Column(String(100), nullable=False, index=True)
+    version = Column(String(20), default="1.0.0")
+    company = Column(String(255), default="")
+    api_url = Column(String(500), default="")
+    environment = Column(String(20), default="production")
+    icon = Column(String(50), default="")
+    primary_color = Column(String(7), default="#1e40af")
+    status = Column(String(20), default="active")
     origin_url = Column(String(500), default="")
     context = Column(Text, default="")
+    modules = Column(JSON, default=list)
+    permissions = Column(JSON, default=list)
+    supported_resources = Column(JSON, default=lambda: ["voice", "image", "document"])
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
 
 class Memory(Base):

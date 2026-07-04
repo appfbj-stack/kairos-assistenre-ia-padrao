@@ -7,7 +7,11 @@
       this.apiKey = config.apiKey || ""
       this.appSlug = config.appSlug || ""
       this.appName = config.appName || ""
-      this.ambiente = config.ambiente || "production"
+      this.appVersion = config.appVersion || "1.0.0"
+      this.company = config.company || ""
+      this.environment = config.environment || "production"
+      this.icon = config.icon || ""
+      this.primaryColor = config.primaryColor || "#1e40af"
       this.online = navigator.onLine
       const self = this
       window.addEventListener("online", () => { self.online = true })
@@ -70,8 +74,47 @@
       })
     }
 
-    async registerApp(name, slug, originUrl, context) {
-      return this.request("POST", "/api/tools/apps/register", { name, slug, origin_url: originUrl, context })
+    async registerApp(name, slug, options) {
+      const body = {
+        name: name || this.appName,
+        slug: slug || this.appSlug,
+        version: (options && options.version) || this.appVersion,
+        company: (options && options.company) || this.company,
+        api_url: (options && options.apiUrl) || "",
+        environment: (options && options.environment) || this.environment || "production",
+        icon: (options && options.icon) || this.icon,
+        primary_color: (options && options.primaryColor) || this.primaryColor,
+        origin_url: (options && options.originUrl) || "",
+        context: (options && options.context) || "",
+        modules: (options && options.modules) || [],
+        permissions: (options && options.permissions) || [],
+        supported_resources: (options && options.supportedResources) || ["voice", "image", "document", "agent"],
+      }
+      return this.request("POST", "/api/apps/register", body)
+    }
+
+    async getApp(appId) {
+      return this.request("GET", `/api/apps/${appId}`)
+    }
+
+    async getAppBySlug(slug) {
+      return this.request("GET", `/api/apps/slug/${slug}`)
+    }
+
+    async listApps() {
+      return this.request("GET", "/api/apps")
+    }
+
+    async updateApp(appId, data) {
+      return this.request("PUT", `/api/apps/${appId}`, data)
+    }
+
+    async removeApp(appId) {
+      return this.request("DELETE", `/api/apps/${appId}`)
+    }
+
+    async setAppStatus(appId, status) {
+      return this.request("PATCH", `/api/apps/${appId}/status?status=${status}`)
     }
 
     async registerTool(appSlug, name, description, schema, endpoint, method, headers) {
@@ -322,6 +365,11 @@
     initialize(config) {
       this.client = new KairosClient(config)
       return this.client
+    },
+    async autoRegister(options) {
+      if (!this.client) throw new Error("Kairos not initialized. Call Kairos.initialize() first.")
+      const app = await this.client.registerApp(null, null, options)
+      return app
     },
     context: {
       async register(appInfo) {

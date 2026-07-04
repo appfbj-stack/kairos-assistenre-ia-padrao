@@ -1,6 +1,7 @@
 from typing import Optional
 from core.container import Container
 from core.domain.entities.context import RuntimeContext
+from core.domain.entities.app import AppDef
 
 
 class KairosSDK:
@@ -52,6 +53,18 @@ class KairosSDK:
 
     def update_context(self, key: str, **kwargs):
         self._container.context_manager.update(key, **kwargs)
+
+    async def register_app(self, app: AppDef) -> AppDef:
+        return await self._container.app_registry.register(app)
+
+    async def list_apps(self, tenant_id: str) -> list[AppDef]:
+        return await self._container.app_registry.list_by_tenant(tenant_id)
+
+    async def get_app(self, app_id: str) -> Optional[AppDef]:
+        return await self._container.app_registry.get(app_id)
+
+    async def remove_app(self, app_id: str) -> None:
+        await self._container.app_registry.remove(app_id)
 
     async def register_tool(
         self,

@@ -24,5 +24,7 @@ class Settings(BaseSettings):
     aion_base_url: str = os.getenv("AION_BASE_URL", "http://localhost:8080")
     aion_api_key: str = os.getenv("AION_API_KEY", "")
 
+    app_version: str = os.getenv("APP_VERSION", "2.0.0")
+
 
 settings = Settings()

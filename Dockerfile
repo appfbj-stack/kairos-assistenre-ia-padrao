@@ -7,6 +7,7 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
+COPY kairos-chat-ui-*.tgz ./
 RUN npm install
 
 FROM base AS builder

@@ -26,13 +26,6 @@ async def resolve_tenant(
     return tenant
 
 
-class RegisterAppRequest(BaseModel):
-    name: str
-    slug: str
-    origin_url: str = ""
-    context: str = ""
-
-
 class RegisterToolRequest(BaseModel):
     app_slug: str
     name: str
@@ -47,24 +40,6 @@ class ExecuteToolRequest(BaseModel):
     tool_name: str
     arguments: dict = {}
     app_id: str = ""
-
-
-@router.post("/apps/register")
-async def register_app(
-    req: RegisterAppRequest,
-    tenant=Depends(resolve_tenant),
-    db: AsyncSession = Depends(get_db),
-):
-    from app.models import App
-    existing = await db.execute(
-        select(App).where(App.tenant_id == tenant.id, App.slug == req.slug)
-    )
-    if existing.scalar_one_or_none():
-        raise HTTPException(status_code=400, detail="App slug already exists")
-    app = App(tenant_id=tenant.id, name=req.name, slug=req.slug, origin_url=req.origin_url, context=req.context)
-    db.add(app)
-    await db.commit()
-    return {"id": str(app.id), "slug": app.slug, "name": app.name}
 
 
 @router.post("/register")
