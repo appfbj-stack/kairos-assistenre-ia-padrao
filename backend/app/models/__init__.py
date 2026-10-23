@@ -119,3 +119,11 @@ class AuditLog(Base):
     success = Column(Boolean, default=True)
     ip_address = Column(String(50), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+# Importa os models que vivem em arquivos separados para que
+# Base.metadata.create_all() (init_db) crie as tabelas correspondentes.
+# Sem isso, a tabela "skills" nunca era criada e /api/agents/skills quebrava
+# com UndefinedTableError.
+from app.models.member import Member  # noqa: E402,F401
+from app.models.skill import Skill  # noqa: E402,F401

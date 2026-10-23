@@ -1,5 +1,6 @@
 import json
 import uuid
+import sys
 from typing import Optional, AsyncGenerator
 
 from core.domain.entities.context import RuntimeContext
@@ -87,14 +88,17 @@ class Orchestrator:
         system_prompt += "\n\nVocê tem acesso a capacidades do Aion (Skills, MCPs, Agentes especializados)."
         system_prompt += "\nSkills Aion têm o prefixo 'aion_', MCPs têm o prefixo 'mcp_'."
         system_prompt += "\nUse a ferramenta mais adequada para cada tarefa."
+        system_prompt += "\n\nSempre que o usuario pedir para cadastrar, criar ou modificar algo, use imediatamente a ferramenta disponivel."
 
         await self.events.publish(Event(EventType.LLM_CALLED, {
             "conversation_id": conversation_id, "tools_count": len(openai_tools)
         }))
 
+        _names = [t.get("function",{}).get("name","?") for t in openai_tools] if openai_tools else []
+        print(f"DEBUG: tools={_names} count={len(_names)}", flush=True, file=sys.stderr)
+
         response = await self.llm.chat(
             messages=[{"role": "system", "content": system_prompt}] + llm_history,
-            model=ctx.tenant.slug,
             tools=openai_tools if openai_tools else None,
         )
 
@@ -103,6 +107,7 @@ class Orchestrator:
         final_content = msg.get("content") or ""
 
         if msg.get("tool_calls"):
+            print(f"DEBUG: tool_calls={msg['tool_calls']}", flush=True, file=sys.stderr)
             audit_ctx = {
                 "tenant_id": ctx.tenant.id,
                 "user_id": ctx.user.id,
@@ -185,7 +190,6 @@ class Orchestrator:
         full_response = ""
         async for chunk in self.llm.chat_stream(
             messages=[{"role": "system", "content": system_prompt}] + llm_history,
-            model=ctx.tenant.slug,
             tools=openai_tools if openai_tools else None,
         ):
             full_response += chunk

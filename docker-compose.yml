@@ -9,46 +9,43 @@ services:
     volumes:
       - kairos-assistant-pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U kairos -d kairos_assistant"]
+      test:
+        - CMD-SHELL
+        - pg_isready -U kairos -d kairos_assistant
       interval: 5s
       timeout: 5s
       retries: 10
     restart: unless-stopped
     networks:
       - kairos_network
-
-  # Ollama - LLM local para testes sem custo de API
   ollama:
     image: ollama/ollama:latest
     container_name: kairos-ollama
     volumes:
       - kairos-ollama-data:/root/.ollama
     ports:
-      - "11434:11434"
+      - 11434:11434
     restart: unless-stopped
     networks:
       - kairos_network
-
   backend:
     build:
       context: .
       dockerfile: backend/Dockerfile
     container_name: kairos-assistant-api
     ports:
-      - "8070:8000"
+      - 8070:8000
     environment:
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - OPENROUTER_MODEL=${OPENROUTER_MODEL:-openrouter/auto}
-      - DATABASE_URL=postgresql+asyncpg://kairos:${POSTGRES_PASSWORD}@postgres:5432/kairos_assistant
+      - DATABASE_URL=postgresql+asyncpg://kairos:${POSTGRES_PASSWORD}@kairos-assistant-db:5432/kairos_assistant
       - JWT_SECRET=${JWT_SECRET}
       - TTS_API_KEY=${TTS_API_KEY}
       - TTS_PROVIDER=${TTS_PROVIDER:-elevenlabs}
       - AION_BASE_URL=${AION_BASE_URL:-http://aion:8080}
       - AION_API_KEY=${AION_API_KEY}
-      # Ollama - LLM local para agentes
-      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL}
       - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3}
-      # Agentes LangGraph
       - LANGGRAPH_ENABLED=${LANGGRAPH_ENABLED:-true}
       - DEFAULT_AGENT_APP=${DEFAULT_AGENT_APP:-geral}
     depends_on:
@@ -57,16 +54,30 @@ services:
     restart: unless-stopped
     networks:
       - kairos_network
-
+      - dokploy-network
+      - default
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-web.rule=Host(`api.admin.fbautomacao.space`)
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-web.entrypoints=web
+      - traefik.http.services.kairos-assistente-kairos-assistente-kgavlc-27-web.loadbalancer.server.port=8000
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-web.service=kairos-assistente-kairos-assistente-kgavlc-27-web
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-web.middlewares=redirect-to-https@file
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-websecure.rule=Host(`api.admin.fbautomacao.space`)
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-websecure.entrypoints=websecure
+      - traefik.http.services.kairos-assistente-kairos-assistente-kgavlc-27-websecure.loadbalancer.server.port=8000
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-websecure.service=kairos-assistente-kairos-assistente-kgavlc-27-websecure
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-27-websecure.tls.certresolver=letsencrypt
+      - traefik.enable=true
   frontend:
     build:
       context: .
       args:
         - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space
-        - NEXT_PUBLIC_API_KEY=kairos-b4cad9a30caf4491809f90ff
+        - NEXT_PUBLIC_API_KEY=${API_KEY}
     container_name: kairos-assistant-frontend
     ports:
-      - "3050:3000"
+      - 3050:3000
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=https://api.admin.fbautomacao.space
@@ -76,11 +87,26 @@ services:
     restart: unless-stopped
     networks:
       - kairos_network
-
+      - dokploy-network
+      - default
+    labels:
+      - traefik.docker.network=dokploy-network
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-web.rule=Host(`assistente.fbautomacao.space/`)
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-web.entrypoints=web
+      - traefik.http.services.kairos-assistente-kairos-assistente-kgavlc-26-web.loadbalancer.server.port=3008
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-web.service=kairos-assistente-kairos-assistente-kgavlc-26-web
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-web.middlewares=redirect-to-https@file
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-websecure.rule=Host(`assistente.fbautomacao.space/`)
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-websecure.entrypoints=websecure
+      - traefik.http.services.kairos-assistente-kairos-assistente-kgavlc-26-websecure.loadbalancer.server.port=3008
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-websecure.service=kairos-assistente-kairos-assistente-kgavlc-26-websecure
+      - traefik.http.routers.kairos-assistente-kairos-assistente-kgavlc-26-websecure.tls.certresolver=letsencrypt
+      - traefik.enable=true
 networks:
   kairos_network:
     driver: bridge
-
+  dokploy-network:
+    external: true
 volumes:
-  kairos-assistant-pgdata:
-  kairos-ollama-data:
+  kairos-assistant-pgdata: null
+  kairos-ollama-data: null

@@ -12,7 +12,7 @@ import {
     FileText,
     Settings,
     Cpu,
-    Zap,
+    HelpCircle,
     History,
     BarChart2,
     ChevronDown,
@@ -29,10 +29,10 @@ const navItems = [
   { href: "/ferramentas", label: "Ferramentas", icon: Wrench },
   { href: "/documentos", label: "Documentos", icon: FileText },
   { href: "/aion", label: "MCPs", icon: Cpu },
-  { href: "/skills", label: "Skills", icon: Zap },
   { href: "/historico", label: "Histórico", icon: History },
   { href: "/painel", label: "Painel", icon: BarChart2 },
   { href: "/configuracoes", label: "Configurações", icon: Settings },
+  { href: "/ajuda", label: "Ajuda", icon: HelpCircle },
   ]
 
 export function Sidebar() {

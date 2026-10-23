@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 from app.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from app.models import Tenant
+from app.models import Tenant, Conversation
 from fastapi import Request
 
 router = APIRouter(prefix="/api", tags=["chat"])
@@ -40,16 +40,56 @@ async def resolve_tenant(
     return tenant
 
 
+@router.get("/conversations")
+async def listar_conversations(
+    request: Request,
+    tenant=Depends(resolve_tenant),
+    db: AsyncSession = Depends(get_db),
+):
+    """Historico de conversas do tenant. Exposto em 2026-10-23 para a tela /historico."""
+    result = await db.execute(
+        select(Conversation)
+        .where(Conversation.tenant_id == tenant.id)
+        .order_by(Conversation.updated_at.desc())
+        .limit(100)
+    )
+    conversations = result.scalars().all()
+    return {
+        "total": len(conversations),
+        "conversations": [
+            {
+                "id": str(c.id),
+                "title": c.title,
+                "created_at": c.created_at.isoformat() if c.created_at else None,
+                "updated_at": c.updated_at.isoformat() if c.updated_at else None,
+            }
+            for c in conversations
+        ],
+    }
+
+
 @router.post("/chat")
 async def chat(
     req: ChatRequest,
     request: Request,
     tenant=Depends(resolve_tenant),
+    db: AsyncSession = Depends(get_db),
 ):
     container = request.app.state.container
-    context_key = f"api:{tenant.id}"
+    app_slug = req.app_slug or "kairos-igreja"
+    context_key = f"api:{tenant.id}:{app_slug}"
     ctx = container.context_manager.get(context_key)
     if not ctx:
+        from app.models import App
+        app_id = ""
+        app_name = ""
+        app_result = await db.execute(
+            select(App).where(App.tenant_id == tenant.id, App.slug == app_slug)
+        )
+        app_obj = app_result.scalar_one_or_none()
+        if app_obj:
+            app_id = str(app_obj.id)
+            app_name = app_obj.name
         ctx = container.context_manager.build(
             tenant_id=str(tenant.id),
             tenant_name=tenant.name,
@@ -57,7 +97,9 @@ async def chat(
             user_id="api-user",
             user_name="API User",
             user_email="api@kairos.local",
-            app_slug=req.app_slug or "default",
+            app_id=app_id,
+            app_name=app_name,
+            app_slug=app_slug,
         )
         container.context_manager.set(context_key, ctx)
 
@@ -75,9 +117,35 @@ async def chat_stream(
     req: ChatRequest,
     request: Request,
     tenant=Depends(resolve_tenant),
+    db: AsyncSession = Depends(get_db),
 ):
     container = request.app.state.container
-    context_key = f"api:{tenant.id}"
+    app_slug = req.app_slug or "kairos-igreja"
+    context_key = f"api:{tenant.id}:{app_slug}"
+    ctx = container.context_manager.get(context_key)
+    if not ctx:
+        from app.models import App
+        app_id = ""
+        app_name = ""
+        app_result = await db.execute(
+            select(App).where(App.tenant_id == tenant.id, App.slug == app_slug)
+        )
+        app_obj = app_result.scalar_one_or_none()
+        if app_obj:
+            app_id = str(app_obj.id)
+            app_name = app_obj.name
+        ctx = container.context_manager.build(
+            tenant_id=str(tenant.id),
+            tenant_name=tenant.name,
+            tenant_slug=tenant.slug,
+            user_id="api-user",
+            user_name="API User",
+            user_email="api@kairos.local",
+            app_id=app_id,
+            app_name=app_name,
+            app_slug=app_slug,
+        )
+        container.context_manager.set(context_key, ctx)
 
     async def generate():
         async for chunk in container.orchestrator.process_message_stream(

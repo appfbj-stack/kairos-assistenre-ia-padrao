@@ -4,7 +4,7 @@ import { KairosChat } from "@kairos/chat-ui"
 import "@kairos/chat-ui/styles.css"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY || "kairos-b4cad9a30caf4491809f90ff"
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY || ""
 
 export function ClientChatPage() {
   return (

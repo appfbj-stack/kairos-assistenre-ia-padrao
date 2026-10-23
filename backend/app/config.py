@@ -19,7 +19,17 @@ class Settings(BaseSettings):
     jwt_algorithm: str = "HS256"
     jwt_expiry_hours: int = 24
 
-    cors_origins: list[str] = ["*"]
+    cors_origins: list[str] = [
+        "https://admin.fbautomacao.space",
+        "https://kairoassistente.fbautomacao.space",
+        "https://assistente.fbautomacao.space",
+        "https://app.fbautomacao.space",
+        "http://localhost:3000",
+        "http://localhost:8000",
+    ]
+
+    # Documentacao interativa da API fica desligada em producao.
+    enable_docs: bool = os.getenv("ENABLE_DOCS", "false").lower() == "true"
 
     aion_base_url: str = os.getenv("AION_BASE_URL", "http://localhost:8080")
     aion_api_key: str = os.getenv("AION_API_KEY", "")

@@ -13,13 +13,14 @@ from app.routes.multimodal import router as multimodal_router
 from app.routes.aion import router as aion_router
 from app.routes.members import router as members_router
 from app.routes.langgraph_agent import router as langgraph_router
+from app.security import tenant_guard
 from core.container import Container
 from app.repos.conversation_repo import SQLAlchemyConversationRepo
 from app.repos.memory_repo import SQLAlchemyMemoryRepo
 from app.repos.tool_repo import SQLAlchemyToolRepo
 from app.repos.app_repo import SQLAlchemyAppRepo
 from app.repos.audit_repo import SQLAlchemyAuditRepo
-from app.repos.openrouter_llm import OpenRouterLLM
+from app.repos.ollama_llm import OllamaLLM
 from core.domain.entities.app import (
     AppDef, AppModule, AppPermission, SupportedResource,
     AppEnvironment,
@@ -92,7 +93,7 @@ async def lifespan(app: FastAPI):
         tool_repo=SQLAlchemyToolRepo(async_session),
         app_repo=SQLAlchemyAppRepo(async_session),
         audit_repo=SQLAlchemyAuditRepo(async_session),
-        llm=OpenRouterLLM(),
+        llm=OllamaLLM(),
         openrouter_key=settings.openrouter_api_key,
         aion_base_url=settings.aion_base_url,
         aion_api_key=settings.aion_api_key,
@@ -111,7 +112,15 @@ app = FastAPI(
     description="Kairos Assistant API - Powered by Aion Multi-Agent System",
     version="2.1.0",
     lifespan=lifespan,
+    # Documentacao publica nao deve expor o mapa de rotas em producao.
+    docs_url="/docs" if settings.enable_docs else None,
+    redoc_url="/redoc" if settings.enable_docs else None,
+    openapi_url="/openapi.json" if settings.enable_docs else None,
 )
+
+# Guard global de tenant. Registrado ANTES do CORS para que o CORS
+# continue sendo a camada mais externa (401 ainda recebe os headers CORS).
+app.middleware("http")(tenant_guard)
 
 app.add_middleware(
     CORSMiddleware,

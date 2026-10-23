@@ -64,12 +64,16 @@ class SQLAlchemyToolRepo(ToolPort):
 
     async def execute(self, tool: ToolDef, args: dict) -> dict:
         headers = tool.headers
-        async with httpx.AsyncClient(timeout=30) as client:
+        async with httpx.AsyncClient(timeout=30, follow_redirects=True) as client:
             if tool.method.upper() == "GET":
                 resp = await client.get(tool.endpoint, params=args, headers=headers)
             else:
                 resp = await client.post(tool.endpoint, json=args, headers=headers)
-            return {"status": resp.status_code, "data": resp.json()}
+            try:
+                data = resp.json()
+            except Exception:
+                data = {"status_code": resp.status_code, "body": resp.text[:500]}
+            return {"status": resp.status_code, "data": data}
 
     async def delete(self, tool_id: str) -> None:
         async with self._session_factory() as session:
